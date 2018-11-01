@@ -1,5 +1,8 @@
 package controllers
 
+import play.api.libs.circe._
+import io.circe.generic.auto._
+import io.circe.syntax._
 import javax.inject._
 import play.api._
 import play.api.mvc._
@@ -9,8 +12,10 @@ import play.api.mvc._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) with Circe {
 
+  case class User(name: String, age: Int)
+  
   /**
    * Create an Action to render an HTML page.
    *
@@ -19,6 +24,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    * a path of `/`.
    */
   def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index())
+  val user = User("Dan", 18)
+
+    Ok(user.asJson)
   }
 }
